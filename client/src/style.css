@@ -1,0 +1,171 @@
+@CHARSET "ISO-8859-1";
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+:root {
+	--primary-color: #047aed;	
+	--secondary-color: #1c3fa8;	
+	--dark-color: #002240;	
+	--light-color: #f4f4f4;	
+	--success-color: #5cb85c;
+	--error-color: #d9534f;
+	
+	--header-height: 50px;
+	--game-max-width: 500px;
+}
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	font-family: 'Lato', sans-serif;	
+	font-size: 20px;
+	color: #333;
+	line-height: 1.6;
+  	height: 100%;
+  	overflow-y: hidden;
+}
+
+header {
+  	display: flex;
+  	flex-direction: row;
+  	align-items: center;
+  	justify-content: center;
+  	flex-wrap: nowrap;
+  	padding: 0 16px;
+  	height: var(--header-height); 	
+  	border-bottom: 1px solid lightgray;
+}
+
+header h1 {
+	font-size: 1em;
+	font-weight: normal;
+	color: dimgray;
+}
+
+#game {
+  	width: 100%;
+  	max-width: var(--game-max-width);
+ 	margin: 0 auto;
+  	height: calc(100% - var(--header-height));
+  	display: flex;
+  	flex-direction: column;
+	padding: 4vw;
+}
+
+#picture {
+	margin: 0 auto 20px;
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+
+#picture::before {
+	content:"";
+	display:block;
+	margin-top: 100%;
+}
+
+#picture .image {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	text-align: center;
+	transform: translateY(-50%);
+}
+
+
+#gameRounds {
+	display: flex;
+	flex-direction: column;
+	font-size: 20px;
+	align-items: center;
+	
+}
+
+.gameRound {
+	display: flex;
+	gap: 20px;
+	width: 100%;
+	padding: 10px;
+	color: #d8d8d8;
+}
+
+.currentRound {
+	background-color: #e2ffdf;
+	color: #333;
+	font-weight: bold;
+}
+
+.completedRound {
+	background-color: #ffefe5;
+	color: #333;
+}
+
+.roundNo {
+	width: 120px;	
+}
+
+.guess, .buttons {
+	flex-grow: 1;
+	display: flex;
+	gap: 10px;
+	width: 100%;
+}
+
+.btn {
+	font-size: 20px;
+	color: #333;
+	border-radius: 4px;	
+	border: none;
+	padding: 6px;
+	font-weight: bold;
+	width: 50%;
+}
+
+.btnGuess {
+	background-color: #6aaa64;
+	color: white;
+}
+	
+.btnPass {
+	background-color: #d8d8d8;
+}
+	
+#inputGuess {
+	position: absolute;
+	top: 20px;
+	width: 90%;
+	height: 40px;
+	left: 5%;
+	font-size: 20px;
+	padding: 6px;
+}
+
+#inputGuess.hide {
+	display: none;
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
