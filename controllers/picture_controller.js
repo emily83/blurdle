@@ -1,5 +1,15 @@
 const Picture = require('../models/Picture');
 const Jimp = require('jimp');
+const Fuse = require('fuse.js');
+
+const roundBlurs = {
+    1: 40,
+    2: 30,
+    3: 20,
+    4: 15,
+    5: 10,
+    6: 5
+}
 
 // @desc    Get all pictures
 // @route   GET /api/v1/pictures
@@ -31,16 +41,8 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
         
         const picture = await Picture.findOne({ date: today });
 
-        //const round = req.params.id;
-        const round = 1;
+        const round = req.params.id;
 
-        const roundBlurs = {
-            1: 25,
-            2: 20,
-            3: 15,
-            4: 10,
-            5: 5
-        }
         const blurRadius = roundBlurs[round];
 
         const image = await Jimp.read( picture.url);
@@ -57,6 +59,72 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
             error: 'Server Error'
         });
     }
+}
+
+// @desc    Guess picture
+// @route   POST /api/v1/pictures/today/guess
+// @access  Public
+exports.guessPicture = async (req, res, next) => {
+    try {
+        const { guess, pass, round } = req.body;
+
+        var today = new Date().toISOString().split('T')[0];
+        
+        const picture = await Picture.findOne({ date: today });
+     
+        const image = await Jimp.read( picture.url);
+        
+        const data = {}
+
+        if (pass) {
+            data.outcome = 'pass';
+            if (roundBlurs[round + 1]) {
+                const blurRadius = roundBlurs[round + 1];
+                data.image = await image.blur( blurRadius ).getBase64Async(Jimp.AUTO);
+            } else {
+                data.answer = picture.answer;   
+                data.image = await image.getBase64Async(Jimp.AUTO);
+            }
+        } else {
+            const options = {
+                includeScore: true
+              }
+            const fuse = new Fuse([guess], options);        
+            const result = fuse.search(picture.answer);
+    
+            if ( result.length == 1 && result[0].score < 0.2 ) {
+                data.outcome = 'correct';
+                data.answer = picture.answer;   
+                data.image = await image.getBase64Async(Jimp.AUTO);
+            } else {
+                if ( result.length === 1 ) {
+                    data.outcome = 'close';
+                } else {
+                    data.outcome = 'incorrect';
+                }           
+                if (roundBlurs[round + 1]) {
+                    const blurRadius = roundBlurs[round + 1];
+                    data.image = await image.blur( blurRadius ).getBase64Async(Jimp.AUTO);
+                } else {
+                    data.answer = picture.answer;   
+                    data.image = await image.getBase64Async(Jimp.AUTO);
+                }
+            }
+        }
+        
+
+        return res.status(201).json({
+            success: true,
+            data
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+    
 }
 
 // @desc    Add picture
