@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
+import toast from 'react-simple-toasts';
 import Header from './components/Header'
 import Picture from './components/Picture';
 import Round from './components/Round';
@@ -10,9 +11,18 @@ import { RiCloseCircleFill } from "react-icons/ri"
 
 Modal.setAppElement('#root');
 
+export const outcomeUnicode = {
+  '' : '⚪',
+  'correct' : '🟢',
+  'incorrect' : '🔴',
+  'close' : '🟡',
+  'pass' : '⚫'
+}
+
 function App() {
 
   const [isLoading, setIsLoading] = useState(true);
+  const [pictureNumber, setPictureNumber] = useState();
   const [picture, setPicture] = useState();
   const [round, setRound] = useState(1);
   const [isGuessing, setIsGuessing] = useState(false);
@@ -26,7 +36,8 @@ function App() {
   async function getPicture(round) {
     try {
       const res = await axios.get(`/api/v1/pictures/today/${round}`);
-      setPicture(res.data.data);
+      setPicture(res.data.data.blurryPicture);
+      setPictureNumber(res.data.data.pictureNumber);
       setIsLoading(false);
     } catch (error) {
         console.log(error)
@@ -89,33 +100,26 @@ function App() {
 
   async function shareScore() {
    
-
     const canonical = document.querySelector("link[rel=canonical]");
     let url = canonical ? canonical.href : document.location.href;
-    const title = "Blurdle 1";
-
-    const text = `${title} \n 🟡🔴`;
-    const shareDetails = { url, title, text };
+    const title = `Blurdle #${pictureNumber}`;
+    const result = rounds.map(r => outcomeUnicode[r.outcome]);
+    const text = `${title} \n\n ${result.join('')} \n\n`;
+    const shareData = { url, title, text };
 
     if (navigator.share) {
-      try {
-          await navigator
-          .share(shareDetails)
-          .then(() =>
-              console.log("Hooray! Your content was shared to tha world")
-          );
-      } catch (error) {
-          console.log(`Oops! I couldn't share to the world because: ${error}`);
-      }
+      navigator.share(shareData)
+        .then(() => console.log('Successful share'))
+        .catch((error) => console.log('Error sharing', error));
     } else {
-      // fallback code
-      alert(
-          "Web share is currently not supported on this browser. Please provide a callback"
-      );
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+          .then(() => toast('Copied results to clipboard'))
+          .catch((error) => console.log('Error copying text to clipboard', error));
+      }
     }
 
   }
-
 
   return (
     <div id="game" className={isSolved ? "solved" : ""}>
@@ -147,7 +151,6 @@ function App() {
           <RiCloseCircleFill className="modalClose" onClick={closeModal} />
           { modalType === 'info' && <InfoDialog /> }
           { modalType === 'stats' && <StatsDialog /> }
-
         </Modal>
 
     </div>

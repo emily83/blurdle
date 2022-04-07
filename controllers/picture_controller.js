@@ -37,8 +37,8 @@ exports.getPictures = async(req, res, next) => {
 exports.getTodayBlurryPicture = async(req, res, next) => {
     try {
 
-        var today = new Date().toISOString().split('T')[0];
-        
+        const today = new Date().toISOString().split('T')[0];
+ 
         const picture = await Picture.findOne({ date: today });
 
         const round = req.params.id;
@@ -50,7 +50,10 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            data: base64String
+            data: {
+                pictureNumber: picture.pictureNumber,
+                blurryPicture: base64String
+            }
         });
     } catch (error) {
         console.log(error);
@@ -68,8 +71,8 @@ exports.guessPicture = async (req, res, next) => {
     try {
         const { guess, pass, round } = req.body;
 
-        var today = new Date().toISOString().split('T')[0];
-        
+        const today = new Date().toISOString().split('T')[0];
+
         const picture = await Picture.findOne({ date: today });
      
         const image = await Jimp.read( picture.url);
@@ -88,16 +91,28 @@ exports.guessPicture = async (req, res, next) => {
         } else {
             const options = {
                 includeScore: true
-              }
-            const fuse = new Fuse([guess], options);        
-            const result = fuse.search(picture.answer);
-    
-            if ( result.length == 1 && result[0].score < 0.2 ) {
+            }
+            const answers = [picture.answer];
+            picture.alternativeAnswers.forEach(a => answers.push(a));
+            let score = 1;
+            answers.forEach(a => {
+                console.log(a);
+                const fuse = new Fuse([guess], options);
+                const result = fuse.search(a);
+                console.log(result);
+                if ( result.length == 1 ) {
+                    if ( result[0].score < score ) {
+                        score = result[0].score;
+                    }
+                }
+            });
+
+            if ( score < 0.2 ) {
                 data.outcome = 'correct';
                 data.answer = picture.answer;   
                 data.image = await image.getBase64Async(Jimp.AUTO);
             } else {
-                if ( result.length === 1 ) {
+                if ( score < 1 ) {
                     data.outcome = 'close';
                 } else {
                     data.outcome = 'incorrect';
@@ -132,7 +147,11 @@ exports.guessPicture = async (req, res, next) => {
 // @access  Public
 exports.addPicture = async (req, res, next) => {
     try {
-        const { text, amount } = req.body;
+
+        const pic = req.body;
+        if ( !pic.url ) {
+            pic.url = `https://blurdle.s3.eu-west-1.amazonaws.com/${Date.now()}.jpg`
+        }
 
         const picture = await Picture.create(req.body);
 

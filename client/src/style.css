@@ -131,7 +131,8 @@ header h1 {
 	justify-content: center;
 	align-items: center;
 	padding: 4px;
-	/* background-color: rgba(255, 255, 255, 0.35); */
+	/* width: 100%;
+	background-color: rgba(255, 255, 255, 0.35); */
 }
 
 #scoreInner div {
@@ -269,7 +270,9 @@ header h1 {
 #modal {
 	background-color: var(--background-colour) !important;
 	width: 90%;
+	max-width: 460px;
 	inset: 60px 5% !important;	
+	margin: 0 auto;
 }
 
 #modal h2 {
@@ -291,17 +294,3 @@ header h1 {
 	width: 30px;
 	height: 30px;
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	

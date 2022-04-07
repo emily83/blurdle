@@ -5,6 +5,9 @@ const PictureSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Please enter date']
     },
+    pictureNumber: {
+        type: Number
+    },
     url: {
         type: String,
         required: [true, 'Please enter URL']
@@ -13,6 +16,10 @@ const PictureSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, 'Please enter answer']
+    },
+    alternativeAnswers: {
+        type: Array,
+        default: []
     },
     createdAt: {
         type: Date,
