@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { isBrowser } from 'react-device-detect';
 import BeatLoader from "react-spinners/BeatLoader";
-import { FaGrin, FaSadTear, FaLightbulb } from "react-icons/fa"
+import { FaGrin, FaSadTear, FaMeh } from "react-icons/fa"
 import { GoDash } from "react-icons/go"
 
 export const outcomeIcons = {
   '' : '',
   'correct' : <FaGrin />,
   'incorrect' : <FaSadTear />,
-  'close' : <FaLightbulb />,
+  'close' : <FaMeh />,
   'pass' : <GoDash />
 }
 
