@@ -18,7 +18,9 @@ const Round = ({ roundNo, guess, outcome, currentRound, isGuessing, isSubmitting
 
   function onFormSubmit(e) {
     e.preventDefault();
-    submitGuess(inputGuessValue);
+    if ( inputGuessValue ) {
+      submitGuess(inputGuessValue);
+    }
   }
 
   function pass(e) {
