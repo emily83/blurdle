@@ -2,7 +2,7 @@ import { isBrowser } from "react-device-detect";
 import BeatLoader from "react-spinners/BeatLoader";
 import { FiShare2 } from "react-icons/fi"
 
-const Picture = ({ picture, isGuessing, answer, rounds, shareScore }) => {
+const Picture = ({ picture, isGuessing, answer, roundData, shareScore }) => {
 
   return (
       <div id="picture" className={(isGuessing && !isBrowser) ? "guessing" : ""}>
@@ -12,7 +12,7 @@ const Picture = ({ picture, isGuessing, answer, rounds, shareScore }) => {
         { answer && 
             <div id="score">
                 <div id="scoreInner">
-                  {rounds.map(r => <div key={r.roundNo} className={r.outcome ? r.outcome : 'blank'}></div>)}
+                  {roundData.map(r => <div key={r.roundNo} className={r.outcome ? r.outcome : 'blank'}></div>)}
                 </div>
                 <div id="share" onClick={shareScore}>Share <FiShare2 /></div>
             </div> 

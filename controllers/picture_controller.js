@@ -32,7 +32,7 @@ exports.getPictures = async(req, res, next) => {
 }
 
 // @desc    Get Today's Blurry Picture by Round number
-// @route   GET /api/v1/pictures/today:round
+// @route   GET /api/v1/pictures/today:currentRound
 // @access  Public
 exports.getTodayBlurryPicture = async(req, res, next) => {
     try {
@@ -41,19 +41,26 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
  
         const picture = await Picture.findOne({ date: today });
 
-        const round = req.params.id;
+        const currentRound = req.params.id;
 
-        const blurRadius = roundBlurs[round];
+        const data = { pictureNumber: picture.pictureNumber };
 
         const image = await Jimp.read( picture.url);
-        const base64String = await image.blur( blurRadius ).getBase64Async(Jimp.AUTO);
+        if (roundBlurs[currentRound]) {
+            const blurRadius = roundBlurs[currentRound];
+            data.image = await image.blur( blurRadius ).getBase64Async(Jimp.AUTO);
+        } else {
+            data.answer = picture.answer;   
+            data.image = await image.getBase64Async(Jimp.AUTO);
+        }
+
+        var endOfToday = new Date();
+        endOfToday.setHours(23,59,59,59,999);
+        data.expiry = endOfToday.getTime();
 
         return res.status(200).json({
             success: true,
-            data: {
-                pictureNumber: picture.pictureNumber,
-                blurryPicture: base64String
-            }
+            data
         });
     } catch (error) {
         console.log(error);
@@ -69,7 +76,7 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
 // @access  Public
 exports.guessPicture = async (req, res, next) => {
     try {
-        const { guess, pass, round } = req.body;
+        const { guess, pass, currentRound } = req.body;
 
         const today = new Date().toISOString().split('T')[0];
 
@@ -81,8 +88,8 @@ exports.guessPicture = async (req, res, next) => {
 
         if (pass) {
             data.outcome = 'pass';
-            if (roundBlurs[round + 1]) {
-                const blurRadius = roundBlurs[round + 1];
+            if (roundBlurs[currentRound + 1]) {
+                const blurRadius = roundBlurs[currentRound + 1];
                 data.image = await image.blur( blurRadius ).getBase64Async(Jimp.AUTO);
             } else {
                 data.answer = picture.answer;   
@@ -96,10 +103,8 @@ exports.guessPicture = async (req, res, next) => {
             picture.alternativeAnswers.forEach(a => answers.push(a));
             let score = 1;
             answers.forEach(a => {
-                console.log(a);
                 const fuse = new Fuse([guess], options);
                 const result = fuse.search(a);
-                console.log(result);
                 if ( result.length == 1 ) {
                     if ( result[0].score < score ) {
                         score = result[0].score;
@@ -117,8 +122,8 @@ exports.guessPicture = async (req, res, next) => {
                 } else {
                     data.outcome = 'incorrect';
                 }           
-                if (roundBlurs[round + 1]) {
-                    const blurRadius = roundBlurs[round + 1];
+                if (roundBlurs[currentRound + 1]) {
+                    const blurRadius = roundBlurs[currentRound + 1];
                     data.image = await image.blur( blurRadius ).getBase64Async(Jimp.AUTO);
                 } else {
                     data.answer = picture.answer;   
@@ -128,7 +133,7 @@ exports.guessPicture = async (req, res, next) => {
         }
         
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             data
         });
