@@ -20,28 +20,6 @@ export const outcomeUnicode = {
   'pass' : '⚫'
 }
 
-const state =  {
-  "boardState":["","","","","",""],
-  "evaluations":[null,null,null,null,null,null],
-  "rowIndex":0,
-  "solution":"foray",
-  "gameStatus":"IN_PROGRESS",
-  "lastPlayedTs":1649274412046,
-  "lastCompletedTs":1649274412046,
-  "restoringFromLocalStorage":null,
-  "hardMode":false
-}
-
-const statistics = {
-  "currentStreak":1,
-  "maxStreak":1,
-  "guesses":{"1":1,"2":0,"3":0,"4":0,"5":0,"6":0,"fail":0},
-  "winPercentage":100,
-  "gamesPlayed":1,
-  "gamesWon":1,
-  "averageGuesses":1
-}
-
 function App() {
 
   const [isLoading, setIsLoading] = useState(true);
@@ -73,6 +51,20 @@ function App() {
   });
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalType, setModalType] = useState('');
+  const [statistics, setStatistics] = useState(() => {
+    if ( localStorage.getItem('statistics') ) {
+      return JSON.parse(localStorage.getItem('statistics'));
+    } else {
+      return {
+        "gamesPlayed" : 0,
+        "gamesWon" : 0,
+        "winPercentage" : 0,
+        "currentStreak" : 0,
+        "maxStreak" : 0,
+        "guesses" : {"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"fail":0}
+      }
+    }
+  });
 
   async function getPicture(currentRound) {
     try {
@@ -126,10 +118,10 @@ function App() {
     localStorage.setItem('currentRound', currentRound);
   }, [currentRound]);
 
-  //whenever isSolved changes save in local storage
+  //whenever statistics changes save in local storage
   useEffect(() => {
-    localStorage.setItem('isSolved', JSON.stringify(isSolved));
-  }, [isSolved]);
+    localStorage.setItem('statistics', JSON.stringify(statistics));
+  }, [statistics]);
 
   async function submitGuess( guess, pass=false ) {
 
@@ -162,10 +154,30 @@ function App() {
         if (res.data.data.outcome === 'correct') {
           setIsSolved(true);
           setAnswer(res.data.data.answer);
+          setStatistics(
+            { gamesPlayed : statistics.gamesPlayed + 1, 
+              gamesWon: statistics.gamesWon + 1,
+              winPercentage : ((statistics.gamesWon + 1) / (statistics.gamesPlayed + 1) * 100).toFixed(1),
+              currentStreak: statistics.currentStreak + 1,
+              maxStreak: statistics.currentStreak + 1 > statistics.maxStreak ? statistics.currentStreak + 1 : statistics.maxStreak,
+              guesses: { ...statistics.guesses, [currentRound] : statistics.guesses[currentRound] + 1 }
+            }
+          );
+
           setCurrentRound(7);
+
         } else {        
           if (currentRound === 6)  {
             setAnswer(res.data.data.answer);
+
+            setStatistics(
+              { ...statistics,
+                gamesPlayed : statistics.gamesPlayed + 1, 
+                winPercentage : (statistics.gamesWon / (statistics.gamesPlayed + 1) * 100).toFixed(1),
+                currentStreak: 0,
+                guesses: { ...statistics.guesses, fail : statistics.guesses['fail'] + 1 }
+              }
+            );
           }
           setCurrentRound(currentRound + 1);
         }
@@ -240,7 +252,7 @@ function App() {
         >
           <RiCloseCircleFill className="modalClose" onClick={closeModal} />
           { modalType === 'info' && <InfoDialog /> }
-          { modalType === 'stats' && <StatsDialog /> }
+          { modalType === 'stats' && <StatsDialog statistics={statistics} /> }
         </Modal>
 
     </div>
