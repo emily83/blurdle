@@ -164,6 +164,8 @@ function App() {
             }
           );
 
+          toast('Woo!');
+
           setCurrentRound(7);
 
         } else {        
@@ -180,6 +182,10 @@ function App() {
             );
           }
           setCurrentRound(currentRound + 1);
+
+          if (res.data.data.outcome == 'close') {
+            toast('Close!');
+          }
         }
         setPicture(res.data.data.image);
         
