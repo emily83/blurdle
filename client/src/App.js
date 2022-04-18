@@ -44,7 +44,12 @@ function App() {
   const [answer, setAnswer] = useState();
   const [roundData, setRoundData] = useState(() => {
     if ( localStorage.getItem('roundData') ) {
-      return JSON.parse(localStorage.getItem('roundData'));
+      return JSON.parse(localStorage.getItem('roundData')).map(r => 
+        (r.guess !== '' && r.outcome === '')
+        ? { ...r, guess: '' } 
+        : r 
+      );
+
     } else {
       return [...Array(6).fill(0).map((x, i) => ({ roundNo: i + 1, guess: '', outcome: '' }))]
     }
@@ -164,7 +169,7 @@ function App() {
             }
           );
 
-          toast('Woo!');
+          //toast('Woo!');
 
           setCurrentRound(7);
 
@@ -183,15 +188,21 @@ function App() {
           }
           setCurrentRound(currentRound + 1);
 
-          if (res.data.data.outcome == 'close') {
-            toast('Close!');
+          if (res.data.data.outcome === 'close') {
+            //toast('Close!');
           }
         }
         setPicture(res.data.data.image);
         
 
       } catch (error) {
-          console.log(error)
+        setRoundData(
+            roundData.map(r => 
+                r.roundNo === currentRound 
+                ? { ...r, guess: '' } 
+                : r 
+        ));
+        toast('Unable to submit guess. Please make sure you have an internet connection')
       }
 
   }
