@@ -22,8 +22,17 @@ export const outcomeUnicode = {
 
 function App() {
 
+  localStorage.removeItem('expiry');
+
   const [isLoading, setIsLoading] = useState(true);
   const [pictureNumber, setPictureNumber] = useState();
+  const [pictureDate, setPictureDate] = useState(() => {
+    if ( localStorage.getItem('pictureDate') ) {
+      return localStorage.getItem('pictureDate');
+    } else {
+      return new Date().toISOString().split('T')[0];
+    }
+  });
   const [picture, setPicture] = useState();
   const [currentRound, setCurrentRound] = useState(() => {
     if ( localStorage.getItem('currentRound') ) {
@@ -71,45 +80,44 @@ function App() {
     }
   });
 
-  async function getPicture(currentRound) {
+  async function getPicture(date, round) {
     try {
-      const res = await axios.get(`/api/v1/pictures/today/${currentRound}`);
+
+      const res = await axios.get(`/api/v1/pictures/${date}/${round}`);
+
       setPicture(res.data.data.image);
       setPictureNumber(res.data.data.pictureNumber);
-      setIsLoading(false);  
       if (res.data.data.answer) {
         setAnswer(res.data.data.answer);
       }
-      localStorage.setItem('expiry', res.data.data.expiry);
+      setIsLoading(false);  
 
     } catch (error) {
-        console.log(error)
+      toast('Unable to get picture. Please make sure you have an internet connection')
     }
   }
 
   //when app loads
   useEffect(() => {
 
-    // if the picture number stored in the browser is not the current picture number, clear data
-    let expired = false;
-    if ( localStorage.getItem('expiry') ) {
-      const expiry = localStorage.getItem('expiry');
-      const now = new Date().getTime();
-      if ( now > expiry ) {
-        localStorage.removeItem('currentRound');
-        localStorage.removeItem('roundData');
-        localStorage.removeItem('isSolved');
-        setCurrentRound(1);
-        setIsSolved(false);
-        setRoundData([...Array(6).fill(0).map((x, i) => ({ roundNo: i + 1, guess: '', outcome: '' }))]);
-        getPicture(1);
-        expired = true;
-      }
-    }   
-    if (!expired) {
-      getPicture(currentRound);
+    // if the picture date stored in the browser is not the current date, clear data
+    const today = new Date().toISOString().split('T')[0];
+    if ( today !== pictureDate ) {
+      localStorage.removeItem('currentRound');
+      localStorage.removeItem('roundData');
+      localStorage.removeItem('isSolved');
+      localStorage.removeItem('pictureDate');
+      setCurrentRound(1);
+      setIsSolved(false);
+      setRoundData([...Array(6).fill(0).map((x, i) => ({ roundNo: i + 1, guess: '', outcome: '' }))]);
+      setPictureDate(today);
+
+      getPicture(today, 1);
+
+    } else {
+      getPicture(pictureDate, currentRound);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -127,6 +135,16 @@ function App() {
   useEffect(() => {
     localStorage.setItem('statistics', JSON.stringify(statistics));
   }, [statistics]);
+  
+  //whenever picture date changes save in local storage
+  useEffect(() => {
+    localStorage.setItem('pictureDate', pictureDate);
+  }, [pictureDate]);
+  
+  //whenever isSolved changes save in local storage
+  useEffect(() => {
+    localStorage.setItem('isSolved', isSolved);
+  }, [isSolved]);
 
   async function submitGuess( guess, pass=false ) {
 
@@ -142,7 +160,7 @@ function App() {
                 : r 
         ));
 
-        const res = await axios.post('/api/v1/pictures/today/guess', {
+        const res = await axios.post(`/api/v1/pictures/${pictureDate}/guess`, {
           guess,
           pass,
           currentRound

@@ -31,17 +31,16 @@ exports.getPictures = async(req, res, next) => {
     }
 }
 
-// @desc    Get Today's Blurry Picture by Round number
-// @route   GET /api/v1/pictures/today:currentRound
+// @desc    Get Blurry Picture for a date by Round number
+// @route   GET /api/v1/pictures/:date:currentRound
 // @access  Public
-exports.getTodayBlurryPicture = async(req, res, next) => {
+exports.getBlurryPicture = async(req, res, next) => {
     try {
 
-        const today = new Date().toISOString().split('T')[0];
- 
-        const picture = await Picture.findOne({ date: today });
+        const date = req.params.date;
+        const currentRound = req.params.currentRound;
 
-        const currentRound = req.params.id;
+        const picture = await Picture.findOne({ date });
 
         const data = { pictureNumber: picture.pictureNumber };
 
@@ -53,10 +52,6 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
             data.answer = picture.answer;   
             data.image = await image.getBase64Async(Jimp.AUTO);
         }
-
-        var endOfToday = new Date();
-        endOfToday.setHours(23,59,59,59,999);
-        data.expiry = endOfToday.getTime();
 
         return res.status(200).json({
             success: true,
@@ -72,15 +67,15 @@ exports.getTodayBlurryPicture = async(req, res, next) => {
 }
 
 // @desc    Guess picture
-// @route   POST /api/v1/pictures/today/guess
+// @route   POST /api/v1/pictures/:date/guess
 // @access  Public
 exports.guessPicture = async (req, res, next) => {
     try {
         const { guess, pass, currentRound } = req.body;
 
-        const today = new Date().toISOString().split('T')[0];
+        const date = req.params.date;
 
-        const picture = await Picture.findOne({ date: today });
+        const picture = await Picture.findOne({ date });
      
         const image = await Jimp.read( picture.url);
         

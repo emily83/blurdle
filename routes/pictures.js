@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getPictures, addPicture, deletePicture, getTodayBlurryPicture, guessPicture } = require('../controllers/picture_controller');
+const { getPictures, addPicture, deletePicture, getBlurryPicture, guessPicture } = require('../controllers/picture_controller');
 
 router
     .route('/')
@@ -12,11 +12,11 @@ router
     .delete(deletePicture);
 
 router
-    .route('/today/:id')
-    .get(getTodayBlurryPicture);
+    .route('/:date/:currentRound')
+    .get(getBlurryPicture);
 
 router
-    .route('/today/guess')
+    .route('/:date/guess')
     .post(guessPicture);
 
 module.exports = router;
