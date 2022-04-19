@@ -22,8 +22,6 @@ export const outcomeUnicode = {
 
 function App() {
 
-  localStorage.removeItem('expiry');
-
   const [isLoading, setIsLoading] = useState(true);
   const [pictureNumber, setPictureNumber] = useState();
   const [pictureDate, setPictureDate] = useState(() => {
@@ -102,11 +100,12 @@ function App() {
 
     // if the picture date stored in the browser is not the current date, clear data
     const today = new Date().toISOString().split('T')[0];
-    if ( today !== pictureDate ) {
+    if ( today !== pictureDate || localStorage.getItem('expiry') ) {
       localStorage.removeItem('currentRound');
       localStorage.removeItem('roundData');
       localStorage.removeItem('isSolved');
       localStorage.removeItem('pictureDate');
+      localStorage.removeItem('expiry');
       setCurrentRound(1);
       setIsSolved(false);
       setRoundData([...Array(6).fill(0).map((x, i) => ({ roundNo: i + 1, guess: '', outcome: '' }))]);
