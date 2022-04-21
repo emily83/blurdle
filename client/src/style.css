@@ -8,7 +8,8 @@
 	--correct-colour: #4d9e4d;
 	--incorrect-colour: #be2e29;
 	--close-colour: #be7d29;
-	--pass-colour: #6d6d6d;
+	--pass-button-colour: #6d6d6d;
+	--pass-colour: #61a2c7;
 	--solved-colour: #77c077;
 }
 
@@ -245,7 +246,7 @@ header h1 {
 }
 	
 .btnPass {
-	background-color: var(--pass-colour);
+	background-color: var(--pass-button-colour);
 	color: white;
 }
 	

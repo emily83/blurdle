@@ -17,7 +17,7 @@ export const outcomeUnicode = {
   'correct' : '🟢',
   'incorrect' : '🔴',
   'close' : '🟡',
-  'pass' : '⚫'
+  'pass' : '🔵'
 }
 
 function App() {
