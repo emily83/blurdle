@@ -1,6 +1,10 @@
+import {  useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import { IoHelpCircle, IoStatsChart } from "react-icons/io5"
 
-const Header = ({ isLoading, viewDialog }) => {
+const Header = ({ viewDialog }) => {
+
+  const { isLoading } = useContext(GlobalContext);
 
   return (
     <header>

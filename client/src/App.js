@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { GlobalContext } from './context/GlobalState';
 import axios from 'axios';
 import Modal from 'react-modal';
 import toast from 'react-simple-toasts';
@@ -22,7 +23,11 @@ export const outcomeUnicode = {
 
 function App() {
 
-  const [isLoading, setIsLoading] = useState(true);
+  const { 
+    isLoading,
+    setIsLoading
+   } = useContext(GlobalContext);
+
   const [pictureNumber, setPictureNumber] = useState();
   const [pictureDate, setPictureDate] = useState(() => {
     if ( localStorage.getItem('pictureDate') ) {
@@ -258,7 +263,7 @@ function App() {
 
   return (
     <div id="game" className={(isSolved && !isLoading) ? "solved" : ""}>
-        <Header isLoading={isLoading} viewDialog={viewDialog} />
+        <Header viewDialog={viewDialog} />
         <Picture picture={picture} isGuessing={isGuessing} answer={answer} roundData={roundData} shareScore={shareScore} />      
         <div id="gameRounds">        
           { !isLoading &&
