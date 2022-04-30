@@ -1,18 +1,29 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import { isBrowser } from 'react-device-detect';
 import BeatLoader from "react-spinners/BeatLoader";
 import { FaGrin, FaSadTear, FaMeh } from "react-icons/fa"
 import { GoDash } from "react-icons/go"
 
-export const outcomeIcons = {
-  '' : '',
-  'correct' : <FaGrin />,
-  'incorrect' : <FaSadTear />,
-  'close' : <FaMeh />,
-  'pass' : <GoDash />
-}
+const Round = ({ roundNo, guess, outcome }) => {
 
-const Round = ({ roundNo, guess, outcome, currentRound, isGuessing, isSubmitting, setIsGuessing, submitGuess }) => {
+  const outcomeIcons = {
+    '' : '',
+    'correct' : <FaGrin />,
+    'incorrect' : <FaSadTear />,
+    'close' : <FaMeh />,
+    'pass' : <GoDash />
+  }
+
+  const outcomeIcon = outcomeIcons[outcome];
+
+  const { 
+      isGuessing, 
+      setIsGuessing,
+      isSubmitting,
+      currentRound,
+      submitGuess,    
+   } = useContext(GlobalContext);
 
   const [inputGuessValue, setInputGuessValue] = useState('');
 
@@ -27,8 +38,6 @@ const Round = ({ roundNo, guess, outcome, currentRound, isGuessing, isSubmitting
     e.preventDefault();
     submitGuess('', true);
   }
-
-  const outcomeIcon = outcomeIcons[outcome];
 
   return (
     <>

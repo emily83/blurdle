@@ -1,8 +1,18 @@
+import {  useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import { isBrowser } from "react-device-detect";
 import BeatLoader from "react-spinners/BeatLoader";
 import { FiShare2 } from "react-icons/fi"
 
-const Picture = ({ picture, isGuessing, answer, roundData, shareScore }) => {
+const Picture = () => {
+
+  const { 
+      isGuessing,
+      picture,
+      answer,
+      roundData,
+      shareScore
+   } = useContext(GlobalContext);
 
   return (
       <div id="picture" className={(isGuessing && !isBrowser) ? "guessing" : ""}>
