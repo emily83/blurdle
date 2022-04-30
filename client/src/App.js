@@ -18,8 +18,17 @@ export const outcomeUnicode = {
   'correct' : '🟢',
   'incorrect' : '🔴',
   'close' : '🟡',
-  'pass' : '⚫'
+  'pass' : '🔵'
 }
+
+function DateToFormattedString(d) {         
+                                 
+  var yyyy = d.getFullYear().toString();                                    
+  var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         
+  var dd  = d.getDate().toString();             
+                       
+  return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+};  
 
 function App() {
 
@@ -33,7 +42,7 @@ function App() {
     if ( localStorage.getItem('pictureDate') ) {
       return localStorage.getItem('pictureDate');
     } else {
-      return new Date().toISOString().split('T')[0];
+      return DateToFormattedString(new Date());
     }
   });
   const [picture, setPicture] = useState();
@@ -104,7 +113,7 @@ function App() {
   useEffect(() => {
 
     // if the picture date stored in the browser is not the current date, clear data
-    const today = new Date().toISOString().split('T')[0];
+    const today = DateToFormattedString(new Date());
     if ( today !== pictureDate || localStorage.getItem('expiry') ) {
       localStorage.removeItem('currentRound');
       localStorage.removeItem('roundData');
