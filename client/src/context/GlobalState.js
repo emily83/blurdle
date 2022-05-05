@@ -2,9 +2,9 @@ import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
 import axios from 'axios';
 import toast from 'react-simple-toasts';
-//import Cookies from 'js-cookie';
-//import setAuthToken from "../utils/setAuthToken";
-//import jwt_decode from "jwt-decode";
+import Cookies from 'js-cookie';
+import setAuthToken from "../utils/setAuthToken";
+import jwt_decode from "jwt-decode";
 import { getFormattedToday } from "../utils/dateUtil"
 import { outcomeUnicode } from "../utils/outcomeUtil"
 
@@ -35,15 +35,18 @@ const initialState = {
         "currentStreak" : 0,
         "maxStreak" : 0,
         "guesses" : {"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"fail":0}
-      }
-
+    },
+    pictures: [],
+    admin: null,
+    adminAuthenticated: Cookies.get('jwtToken') ? Cookies.get('jwtToken') : false,
+    error: null
 }
 
-// const config = {
-//     headers: {
-//         'Content-Type': 'application/json'
-//     }
-// }
+const config = {
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}
 
 // Create context
 export const GlobalContext = createContext();
@@ -153,6 +156,13 @@ export const GlobalProvider = ({ children }) => {
         });
     }
 
+    function setPictures(pictures) {
+        dispatch({
+            type: 'SET_PICTURES',
+            payload: pictures
+        });
+    }
+
     async function getPicture(date, round) {
         try {
     
@@ -168,7 +178,7 @@ export const GlobalProvider = ({ children }) => {
         } catch (error) {
           toast('Unable to get picture. Please make sure you have an internet connection')
         }
-      }
+    }
 
     function clearTodayData(today) {
         localStorage.removeItem('currentRound');
@@ -261,7 +271,73 @@ export const GlobalProvider = ({ children }) => {
         }
     
     }
+      
+    async function getPictures(date, round) {
+        try {
     
+          const res = await axios.get('/api/v1/pictures');
+          setPictures(res.data.data);     
+          setIsLoading(false);  
+    
+        } catch (error) {
+          toast('Unable to get pictures. Please make sure you have an internet connection')
+        }
+    }
+
+    async function adminLogin(adminData) {
+
+        try {
+            const res = await axios.post(`/api/v1/admins/login`, adminData, config);
+
+            if (res.data.data) {
+ 
+                // Save to cookie
+                const { token } = res.data.data;
+                Cookies.set('jwtToken', token, { expires: 28 });
+
+                // Set token to Auth header
+                setAuthToken(token);
+
+                // Decode token to get user data
+                const decoded = jwt_decode(token);
+
+                // Set current admin
+                setCurrentAdmin(decoded);
+
+                return true;
+            }
+        } catch (err) {
+            console.log(err.response.data.error);
+            setError(err.response.data.error)
+            return false;
+        }
+    }
+
+     // Set logged in user
+     function setCurrentAdmin(decoded) {
+        dispatch({
+            type: 'SET_CURRENT_ADMIN',
+            payload: decoded
+        });
+    };
+
+    function adminLogout() {
+        // Remove token from cookie
+        Cookies.remove('jwtToken');  
+
+        // Remove auth header for future requests
+        setAuthToken(false);
+
+        // Set current admin to empty object {} which will set adminAuthenticated to false
+        setCurrentAdmin({});
+    };
+
+    function setError(errorMsg) {
+        dispatch({
+            type: 'SET_ERROR',
+            payload: errorMsg
+        });
+    }
 
     return (
         <GlobalContext.Provider value={{    
@@ -278,6 +354,9 @@ export const GlobalProvider = ({ children }) => {
             modalIsOpen: state.modalIsOpen,
             modalType: state.modalType,
             statistics: state.statistics,
+            pictures: state.pictures,
+            adminAuthenticated: state.adminAuthenticated,
+            error: state.error,
             setIsLoading,
             setIsGuessing,
             setIsSubmitting,
@@ -297,7 +376,11 @@ export const GlobalProvider = ({ children }) => {
             submitGuess,
             viewDialog,
             closeModal,
-            shareScore
+            shareScore,
+            adminLogin,
+            adminLogout,
+            getPictures,
+            setError
         }}>
             {children}
         </GlobalContext.Provider>

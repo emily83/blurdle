@@ -1,5 +1,6 @@
-//export default (state, action) => {
-    export default function variable(state, action) {
+const isEmpty = require("is-empty");
+
+export default function variable(state, action) {
     switch(action.type) {
 
         case 'SET_IS_LOADING':
@@ -110,10 +111,29 @@
                     guesses: { ...state.statistics.guesses, fail : state.statistics.guesses['fail'] + 1 }
                 }
             }
-            console.log(newStatistics);
+
             return {
                 ...state,
                 statistics: newStatistics          
+            }
+
+        case 'SET_CURRENT_ADMIN':
+            return {
+                ...state,
+                adminAuthenticated: !isEmpty(action.payload),
+                admin: action.payload
+            }
+
+        case 'SET_ERROR':
+            return {
+                ...state,
+                error: action.payload
+            }
+
+        case 'SET_PICTURES':
+            return {
+                ...state,
+                pictures: action.payload          
             }
 
         default:

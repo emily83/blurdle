@@ -1,23 +1,22 @@
 import React, { useState, useContext, useRef, useEffect } from 'react'
-import { useHistory } from 'react-router-dom';
-import '../../../css/Register.css';
+import { GlobalContext } from '../../../context/GlobalState';
+import { useNavigate } from 'react-router-dom';
 
-export const Login = () => {
+const Login = () => {
 
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
-    const { adminLogin, adminAuthenticated } = useContext(GlobalContext);
+    const { adminLogin, adminAuthenticated, error, setError } = useContext(GlobalContext);
 
-    const history = useHistory();
+    let navigate = useNavigate();
     
     useEffect(() => {
         if (adminAuthenticated) {
-            history.push("/admin");
+            navigate("/admin");
         }
     });
     
@@ -50,20 +49,13 @@ export const Login = () => {
         }
     
         setError(null);     
-        console.log(error);
         
-        trackPromise(
-            adminLogin({email, password})
-            .then((success) => {            
-                if (success) {
-                    history.push("/admin")
-                }
-            })
-        );
+        adminLogin({email, password});
+
     }
     
     return (
-        <form className="register-form" onSubmit={onSubmit}>
+        <form className="loginForm" onSubmit={onSubmit}>
             <div className="error">{ error }</div>
             <div className="form-control">
                 <label htmlFor="email">Enter your email address</label>
@@ -88,7 +80,9 @@ export const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </div>
-            <button className="btn largeBtn">Login</button>
+            <button className="btn">Login</button>
         </form>
     )
 }
+
+export default Login

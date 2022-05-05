@@ -4,7 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
 
 :root {
-	--background-colour: #1e0b42;
+	--primary-colour: #1e0b42;
+	--secondary-colour: #c1abea;
 	--correct-colour: #4d9e4d;
 	--incorrect-colour: #be2e29;
 	--close-colour: #be7d29;
@@ -25,7 +26,6 @@ html, body, #root {
 }
 
 #game {
-	/* width: 92vw; */
 	width: fit-content;
 	max-width: 500px;
 	max-height: 100%;
@@ -44,7 +44,7 @@ body {
 	font-family: 'Lato', sans-serif;	
 	font-size: 20px;
 	line-height: 1.6;
-	background-color: var(--background-colour);
+	background-color: var(--primary-colour);
 	color: white;
 }
 
@@ -58,6 +58,10 @@ header {
   	justify-content: space-between;
   	flex-wrap: nowrap;
   	height: 60px; 	
+}
+
+#admin header {
+	justify-content: center;
 }
 
 header h1 {
@@ -77,6 +81,10 @@ header h1 {
 	width: 20px;
 	height: 20px;
 	cursor: pointer;
+}
+
+#admin #help, #admin #stats {
+	display: none;
 }
 
 
@@ -269,7 +277,7 @@ header h1 {
 /* -------------- modal dialog -------------- */
 
 #modal {
-	background-color: var(--background-colour) !important;
+	background-color: var(--primary-colour) !important;
 	width: 90%;
 	max-width: 460px;
 	inset: 60px 5% !important;	
@@ -358,7 +366,7 @@ header h1 {
 
 .graphBar {
 	background-color: white;
-	color: var(--background-colour);
+	color: var(--primary-colour);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
@@ -371,3 +379,139 @@ header h1 {
 	text-align: center;
 	font-size: 14px;
 }
+
+
+/* -------------- admin -------------- */
+
+#admin {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	padding: 0 20px;
+}
+
+#admin h2 {
+	margin-bottom: 20px;
+}
+
+#admin main {
+	height: calc(100% - 70px);
+}
+
+/* -------------- admin login -------------- */
+
+form.loginForm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+form.loginForm .error {
+	color: red;
+	margin-top: 3vh;
+	height: 1em;
+}
+
+form.loginForm .form-control {
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+form.loginForm label {
+	margin-bottom: 2px;
+	margin-top: 2em;
+	font-size: 0.9em;
+}
+
+form.loginForm input {
+	display: block;
+	font-size: 1.2em;
+	padding: 5px;
+	text-align: center;
+}
+
+form.loginForm .emailInput {
+	width: 18em;
+	max-width: 90vw;
+}
+
+form.loginForm .passwordInput {
+	width: 18em;
+}
+
+.loginForm .btn {
+	margin-top: 20px;
+	background-color: var(--secondary-colour);
+	font-size: 1.2em;
+	width: 18em;
+	border-radius: 6px;
+}
+
+#logoutButton {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 300px;
+    background: none;
+    border: none !important;
+    display: inline-block;
+    color: white;
+    text-decoration: underline;
+    width: auto;
+    font-size: 1em;
+	font-weight: normal;
+	cursor: pointer;
+}
+
+/* -------------- admin pictures -------------- */
+
+#adminPicturesBodyContainer {
+	height: calc(100% - 100px);
+	overflow: auto;
+}
+
+.adminPictures {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.adminPictures img {
+	width: 70px;
+	height: 70px;
+	vertical-align: middle;
+}
+
+.adminPictures th {
+	background-color: var(--secondary-colour);
+	color: var(--primary-colour);
+	text-align: left;
+	padding: 2px 8px;
+}
+
+.adminPictures td {
+	border-top: 1px solid var(--secondary-colour);
+	text-align: left;
+	padding: 8px;
+}
+
+.adminPictureNumber {
+	width: 120px;
+}
+
+.adminPictureDate {
+	width: 150px;
+}
+
+.adminPictureAnswer {
+	width: 250px;
+}
+
+.adminPictureAlternativeAnswers {
+	width: 250px;
+}
+
