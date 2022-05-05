@@ -26,8 +26,8 @@ const initialState = {
                     : r 
                 ) : 
                 [...Array(6).fill(0).map((x, i) => ({ roundNo: i + 1, guess: '', outcome: '' }))],
-    modalIsOpen: false,
-    modalType: '',
+    modalIsOpen: localStorage.getItem('pictureDate') ? false: true,
+    modalType: 'info',
     statistics: JSON.parse(localStorage.getItem('statistics')) || {
         "gamesPlayed" : 0,
         "gamesWon" : 0,
