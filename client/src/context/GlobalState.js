@@ -339,6 +339,39 @@ export const GlobalProvider = ({ children }) => {
         });
     }
 
+    async function savePicture( pictureDate, file, answer ) {
+        try {
+
+            console.log(pictureDate);
+
+           // Get signed url for saving photo
+           const res = await axios.get('/api/v1/aws/sign-s3-put');
+           const data = res.data.data;
+           if (!data) {
+               return false;
+           }
+
+           // Save photo to S3 bucket
+           await axios.put(data.url, file, {
+               headers: {
+                   'Content-Type': 'image/jpeg'
+               }
+           });
+
+            // Save picture data to db
+            const picture = {
+                "date": pictureDate.toISOString().split('T')[0],
+                "url": data.url.split('?')[0],
+                "answer": answer
+            }
+            await axios.post('/api/v1/pictures/', picture, config);
+
+       } catch (err) {
+           setError(err.response.data.error)
+           return false;
+       }
+   }
+
     return (
         <GlobalContext.Provider value={{    
             isLoading: state.isLoading,
@@ -380,7 +413,8 @@ export const GlobalProvider = ({ children }) => {
             adminLogin,
             adminLogout,
             getPictures,
-            setError
+            setError,
+            savePicture
         }}>
             {children}
         </GlobalContext.Provider>

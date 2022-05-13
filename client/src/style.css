@@ -399,6 +399,7 @@ header h1 {
 
 #admin main {
 	height: calc(100% - 70px);
+	position: relative;
 }
 
 /* -------------- admin login -------------- */
@@ -515,3 +516,58 @@ form.loginForm .passwordInput {
 	width: 250px;
 }
 
+.adminBtn {
+	padding: 3px 6px;
+	background-color: gray;
+	text-decoration: none;
+	color: white;
+	border-radius: 4px;
+	font-size: 18px;
+}
+
+#addPictureButton {
+	position: absolute;
+	top: 10px;
+	right: 0;	
+}
+
+
+/* -------------- admin add picture -------------- */
+
+#pictureForm {
+	text-align-last: left;
+}
+
+#pictureForm label {
+	margin-right: 10px;
+	font-weight: bold;
+}
+
+#pictureAnswer {
+	font-size: 20px;
+	width: 300px;
+	padding: 5px;
+}
+
+#pictureForm .react-date-picker {
+	background-color: white;
+	font-weight: bold;
+	color: black;
+}
+
+#pictureForm .formControl {
+	margin: 20px 0;
+}
+
+#pictureForm .ReactCrop {
+	max-width: 300px;
+	max-height: 300px;
+	margin-right: 10px;
+}
+
+#pictureForm .pictureSelection {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	margin-top: 10px;
+}

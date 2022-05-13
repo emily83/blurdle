@@ -1,4 +1,5 @@
 import {  useContext, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import { GlobalContext } from '../../context/GlobalState';
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -17,9 +18,11 @@ const AdminPictures = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-   return (
+    return (
         <>
             <h2>Daily Pictures</h2>
+
+            <Link to="/admin/addPicture" id="addPictureButton" className="adminBtn">Add Picture</Link>
         
             { isLoading && <BeatLoader id="mainLoader" color="#fff" size={20} css={`margin-top:50px`} /> }
             { !isLoading && 

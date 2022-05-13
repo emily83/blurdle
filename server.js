@@ -12,6 +12,7 @@ connectDB();
 
 const pictures = require('./routes/pictures');
 const admins = require("./routes/admins");
+const aws = require('./routes/aws');
 
 const app = express();
 
@@ -29,6 +30,7 @@ require("./config/passport")(passport);
 
 app.use('/api/v1/pictures', pictures);
 app.use('/api/v1/admins', admins);
+app.use('/api/v1/aws', aws);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
