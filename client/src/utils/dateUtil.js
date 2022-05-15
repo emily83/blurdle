@@ -1,5 +1,8 @@
-exports.getFormattedToday = function() {         
-    const d = new Date();
+export function getFormattedToday() {         
+    return formatDate(new Date());
+}
+
+export function formatDate(d) {         
 
     var yyyy = d.getFullYear().toString();                                    
     var mm = (d.getMonth()+1).toString(); // getMonth() is zero-based         

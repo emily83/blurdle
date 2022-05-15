@@ -5,7 +5,7 @@ import toast from 'react-simple-toasts';
 import Cookies from 'js-cookie';
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
-import { getFormattedToday } from "../utils/dateUtil"
+import { getFormattedToday, formatDate } from "../utils/dateUtil"
 import { outcomeUnicode } from "../utils/outcomeUtil"
 
 // Initial state
@@ -342,8 +342,6 @@ export const GlobalProvider = ({ children }) => {
     async function savePicture( pictureDate, file, answer ) {
         try {
 
-            console.log(pictureDate);
-
            // Get signed url for saving photo
            const res = await axios.get('/api/v1/aws/sign-s3-put');
            const data = res.data.data;
@@ -360,7 +358,7 @@ export const GlobalProvider = ({ children }) => {
 
             // Save picture data to db
             const picture = {
-                "date": pictureDate.toISOString().split('T')[0],
+                "date": formatDate(pictureDate),
                 "url": data.url.split('?')[0],
                 "answer": answer
             }
