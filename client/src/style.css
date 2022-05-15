@@ -398,7 +398,7 @@ header h1 {
 }
 
 #admin main {
-	height: calc(100% - 70px);
+	height: calc(100% - 100px);
 	position: relative;
 }
 
@@ -453,26 +453,38 @@ form.loginForm .passwordInput {
 	border-radius: 6px;
 }
 
-#logoutButton {
-	position: absolute;
-	top: 20px;
-	right: 20px;
-	width: 300px;
+/* -------------- admin pictures -------------- */
+
+#adminNav {
+    display: flex;
+    font-size: 0.6em;
+    background-color: var(--secondary-colour);
+    color: white;
+    text-align: left;
+    padding: 5px 10px;
+}
+
+#adminNav .navLeft {
+    flex-grow: 1;
+}
+
+#adminNav .link {
     background: none;
     border: none !important;
     display: inline-block;
-    color: white;
+    color: black;
+	font-weight: bold;
+    margin: 0 10px;
+    border-left: 1px solid white;
     text-decoration: underline;
     width: auto;
-    font-size: 1em;
-	font-weight: normal;
-	cursor: pointer;
+    font-size: 1.5em;
 }
 
 /* -------------- admin pictures -------------- */
 
 #adminPicturesBodyContainer {
-	height: calc(100% - 100px);
+	height: calc(100% - 130px);
 	overflow: auto;
 }
 
