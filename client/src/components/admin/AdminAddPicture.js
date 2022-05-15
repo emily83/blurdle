@@ -1,10 +1,11 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import { GlobalContext } from '../../context/GlobalState';
 import DatePicker from 'react-date-picker';
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import { canvasPreview } from '../../utils/canvasPreview'
 import { useDebounceEffect } from '../../utils/useDebounceEffect'
-
+import BeatLoader from "react-spinners/BeatLoader";
 import 'react-image-crop/dist/ReactCrop.css'
 
 function makeCrop(mediaWidth, mediaHeight, aspect) {
@@ -22,7 +23,9 @@ function makeCrop(mediaWidth, mediaHeight, aspect) {
 
 const AdminAddPicture = () => {
     
-    const { savePicture } = useContext(GlobalContext);
+    let navigate = useNavigate();
+
+    const { savePicture, isSaving, isSaveSuccessful, error, setError, setIsSaveSuccessful } = useContext(GlobalContext);
 
     const [pictureDate, setPictureDate] = useState(new Date());
     const [answer, setAnswer] = useState('');
@@ -33,6 +36,13 @@ const AdminAddPicture = () => {
     const [crop, setCrop] = useState()
     const [completedCrop, setCompletedCrop] = useState()
     const aspect = 1;
+
+    useEffect(() => {
+      if (isSaveSuccessful) {
+        setIsSaveSuccessful(false);
+        navigate('/admin');
+      }
+    }, [isSaveSuccessful]);
 
     function onSelectFile(e) {
         if (e.target.files && e.target.files.length > 0) {
@@ -74,18 +84,38 @@ const AdminAddPicture = () => {
 
       function submitForm(e) {
           e.preventDefault();
+          if ( !previewCanvasRef.current ) {
+            setError('Please select a picture');
+            return false;
+          }
+          if ( !answer ) {
+            setError('Please enter answer');
+            return false;
+          }
           previewCanvasRef.current.toBlob(function(blob){
             const newImage = new File([blob], blob.name, {type: blob.type,});
             savePicture(pictureDate, newImage, answer);
-          }, 'image/jpeg', 0.95);
-
+          }, 'image/jpeg', 0.95);         
       }
     
     return (
         <>
             <h2>Add Picture</h2>
 
+            { isSaving && 
+              <>
+                <div id="savingPictureBlocker"></div>
+                <div id="savingPictureSpinner">
+                  <span>Saving picture</span>
+                  <BeatLoader id="savingPictureLoader" color="var(--primary-colour)" size={30} /> 
+                </div>
+              </>
+            }
+
             <form id="pictureForm">
+
+              { error && <div id="pictureFormError">{error}</div> }
+
                 <div className="formControl">
                     <label htmlFor="pictureDate">Date</label>
                     <DatePicker 

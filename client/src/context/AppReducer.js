@@ -136,6 +136,18 @@ export default function variable(state, action) {
                 pictures: action.payload          
             }
 
+        case 'SET_IS_SAVING':
+            return {
+                ...state,
+                isSaving: action.payload
+            }
+
+        case 'SET_IS_SAVE_SUCCESSFUL':
+            return {
+                ...state,
+                isSaveSuccessful: action.payload
+            }
+
         default:
             return state;
     }

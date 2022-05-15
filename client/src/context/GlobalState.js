@@ -39,7 +39,9 @@ const initialState = {
     pictures: [],
     admin: null,
     adminAuthenticated: Cookies.get('jwtToken') ? Cookies.get('jwtToken') : false,
-    error: null
+    error: null,
+    isSaving: false,
+    isSaveSuccessful: false
 }
 
 const config = {
@@ -340,7 +342,11 @@ export const GlobalProvider = ({ children }) => {
     }
 
     async function savePicture( pictureDate, file, answer ) {
+        
         try {
+            
+           setIsSaving(true);
+            setError('');
 
            // Get signed url for saving photo
            const res = await axios.get('/api/v1/aws/sign-s3-put');
@@ -363,12 +369,28 @@ export const GlobalProvider = ({ children }) => {
                 "answer": answer
             }
             await axios.post('/api/v1/pictures/', picture, config);
-
+            setIsSaving(false);
+            setIsSaveSuccessful(true);
        } catch (err) {
-           setError(err.response.data.error)
-           return false;
+            setIsSaving(false);
+            setError(err.response.data.error)
+            return false;
        }
    }
+
+   function setIsSaving(isSaving) {
+        dispatch({
+            type: 'SET_IS_SAVING',
+            payload: isSaving
+        });
+    }
+
+   function setIsSaveSuccessful(isSaveSuccessful) {
+        dispatch({
+            type: 'SET_IS_SAVE_SUCCESSFUL',
+            payload: isSaveSuccessful
+        });
+    }
 
     return (
         <GlobalContext.Provider value={{    
@@ -388,6 +410,8 @@ export const GlobalProvider = ({ children }) => {
             pictures: state.pictures,
             adminAuthenticated: state.adminAuthenticated,
             error: state.error,
+            isSaving: state.isSaving,
+            isSaveSuccessful: state.isSaveSuccessful,
             setIsLoading,
             setIsGuessing,
             setIsSubmitting,
@@ -412,7 +436,8 @@ export const GlobalProvider = ({ children }) => {
             adminLogout,
             getPictures,
             setError,
-            savePicture
+            savePicture,
+            setIsSaveSuccessful
         }}>
             {children}
         </GlobalContext.Provider>
