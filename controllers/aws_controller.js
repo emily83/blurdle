@@ -1,4 +1,4 @@
-const S3_BUCKET = process.env.S3_BUCKET;
+const S3_BUCKET = process.env.NODE_ENV == 'development' ? process.env.S3_BUCKET_TEST : process.env.S3_BUCKET;
 
 const aws = require('aws-sdk');
 const path = require('path');

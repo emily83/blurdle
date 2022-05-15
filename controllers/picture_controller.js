@@ -149,7 +149,8 @@ exports.addPicture = async (req, res, next) => {
 
         const pic = req.body;
         if ( !pic.url ) {
-            pic.url = `https://blurdle.s3.eu-west-1.amazonaws.com/${Date.now()}.jpg`
+            const S3_BUCKET = process.env.NODE_ENV == 'development' ? process.env.S3_BUCKET_TEST : process.env.S3_BUCKET;
+            pic.url = `https://${S3_BUCKET}.s3.eu-west-1.amazonaws.com/${Date.now()}.jpg`
         }
 
         const picture = await Picture.create(req.body);
