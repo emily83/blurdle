@@ -458,7 +458,8 @@ form.loginForm .passwordInput {
 #adminNav {
     display: flex;
     font-size: 0.6em;
-    background-color: var(--secondary-colour);
+	border-bottom: 1px solid white;
+	border-top: 1px solid white;
     color: white;
     text-align: left;
     padding: 5px 10px;
@@ -470,15 +471,23 @@ form.loginForm .passwordInput {
 
 #adminNav .link {
     background: none;
-    border: none !important;
     display: inline-block;
-    color: black;
-	font-weight: bold;
-    margin: 0 10px;
+    color: white;
     border-left: 1px solid white;
-    text-decoration: underline;
+	padding: 0 10px;
+    text-decoration: none;
     width: auto;
     font-size: 1.5em;
+}
+
+#adminNav .link:first-child {
+	border-left: none;
+}
+
+#adminNav .link:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
 }
 
 /* -------------- admin pictures -------------- */
