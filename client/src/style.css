@@ -499,6 +499,10 @@ form.loginForm .passwordInput {
 	vertical-align: middle;
 }
 
+.adminPictures img:hover {
+	transform: scale(5);
+}
+
 .adminPictures th {
 	background-color: var(--secondary-colour);
 	color: var(--primary-colour);
