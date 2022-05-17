@@ -341,7 +341,7 @@ export const GlobalProvider = ({ children }) => {
         });
     }
 
-    async function savePicture( pictureDate, file, answer ) {
+    async function savePicture( pictureDate, file, answer, alternativeAnswers ) {
         
         try {
             
@@ -366,7 +366,8 @@ export const GlobalProvider = ({ children }) => {
             const picture = {
                 "date": formatDate(pictureDate),
                 "url": data.url.split('?')[0],
-                "answer": answer
+                "answer": answer,
+                "alternativeAnswers": alternativeAnswers
             }
             await axios.post('/api/v1/pictures/', picture, config);
             setIsSaving(false);

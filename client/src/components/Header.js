@@ -16,6 +16,7 @@ const Header = () => {
         <h1>Blurdle { location.pathname.startsWith('/admin') && 'Admin' }</h1>
         { !location.pathname.startsWith('/admin') && !isLoading && 
             <IoStatsChart id="stats" onClick={() => viewDialog('stats')} /> }
+            { process.env.NODE_ENV == 'development' && <div id="devWarning">DEV</div> }
     </header>
   )
 }

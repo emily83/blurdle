@@ -87,6 +87,14 @@ header h1 {
 	display: none;
 }
 
+#devWarning {
+	position: absolute;
+	left: calc(50% - 10px);
+	top: 40px;
+	color: red;
+	font-size: 12px;
+	font-weight: bold;
+}
 
 /* -------------- picture -------------- */
 
@@ -508,6 +516,10 @@ form.loginForm .passwordInput {
 	vertical-align: middle;
 }
 
+.adminPictures img:hover {
+	transform: scale(5);
+}
+
 .adminPictures th {
 	background-color: var(--secondary-colour);
 	color: var(--primary-colour);
@@ -562,9 +574,14 @@ form.loginForm .passwordInput {
 #pictureForm label {
 	margin-right: 10px;
 	font-weight: bold;
+	width: 100px;
 }
 
-#pictureAnswer {
+#pictureForm .formData {
+
+}
+
+#pictureForm input[type="text"] {
 	font-size: 20px;
 	width: 300px;
 	padding: 5px;
@@ -578,6 +595,27 @@ form.loginForm .passwordInput {
 
 #pictureForm .formControl {
 	margin: 20px 0;
+	display: flex;
+}
+
+#pictureForm .altAnswerSection {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+#pictureForm .altAnswerSection button {
+	margin-left: 5px;
+	padding: 10px;
+}
+
+#pictureForm .altAnswerRemove {
+	background-color: var(--incorrect-colour);
+	color: white;
+}
+
+#pictureForm .altAnswerAdd {
+	background-color: var(--correct-colour);
+	color: white;
 }
 
 #pictureForm .ReactCrop {

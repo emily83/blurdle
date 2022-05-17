@@ -45,7 +45,7 @@ const AdminPictures = () => {
                                     <td className="adminPictureNumber">{p.pictureNumber}</td>
                                     <td className="adminPictureDate">{d.toLocaleDateString()}</td>
                                     <td className="adminPictureAnswer">{p.answer}</td>
-                                    <td className="adminPictureAlternativeAnswers">{p.alternativeAnswers}</td>
+                                    <td className="adminPictureAlternativeAnswers">{p.alternativeAnswers.map((a,i) => <div key={i}>{a}</div>)}</td>
                                     <td className="adminPicturePicture"><img src={p.url} alt={p.answer} /></td>
                                 </tr>
                                 )
