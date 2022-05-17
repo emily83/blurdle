@@ -87,6 +87,14 @@ header h1 {
 	display: none;
 }
 
+#devWarning {
+	position: absolute;
+	left: calc(50% - 10px);
+	top: 40px;
+	color: red;
+	font-size: 12px;
+	font-weight: bold;
+}
 
 /* -------------- picture -------------- */
 
