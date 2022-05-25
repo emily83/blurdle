@@ -341,35 +341,47 @@ export const GlobalProvider = ({ children }) => {
         });
     }
 
-    async function savePicture( pictureDate, file, answer, alternativeAnswers ) {
+    async function savePicture( pictureId, pictureDate, isNewImage, file, answer, alternativeAnswers ) {
         
         try {
             
-           setIsSaving(true);
+            setIsSaving(true);
             setError('');
 
-           // Get signed url for saving photo
-           const res = await axios.get('/api/v1/aws/sign-s3-put');
-           const data = res.data.data;
-           if (!data) {
-               return false;
-           }
-
-           // Save photo to S3 bucket
-           await axios.put(data.url, file, {
-               headers: {
-                   'Content-Type': 'image/jpeg'
-               }
-           });
-
-            // Save picture data to db
+            // create picture object
             const picture = {
                 "date": formatDate(pictureDate),
-                "url": data.url.split('?')[0],
                 "answer": answer,
                 "alternativeAnswers": alternativeAnswers
             }
-            await axios.post('/api/v1/pictures/', picture, config);
+
+            if ( isNewImage ) {
+
+                // Get signed url for saving photo
+                const res = await axios.get('/api/v1/aws/sign-s3-put');
+                const data = res.data.data;
+                if (!data) {
+                    return false;
+                }
+
+                // Save photo to S3 bucket
+                await axios.put(data.url, file, {
+                headers: {
+                    'Content-Type': 'image/jpeg'
+                }
+                });
+
+                picture.url = data.url.split('?')[0];
+
+            }
+
+            // add or update picture in db
+            if ( pictureId ) {
+                await axios.put(`/api/v1/pictures/${pictureId}`, picture, config);
+            } else {
+                await axios.post('/api/v1/pictures/', picture, config);
+            }
+          
             setIsSaving(false);
             setIsSaveSuccessful(true);
        } catch (err) {

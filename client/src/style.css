@@ -525,10 +525,13 @@ form.loginForm .passwordInput {
 	width: 70px;
 	height: 70px;
 	vertical-align: middle;
+	transition-delay: 0.5s;
+	transition-property: transform;
 }
 
 .adminPictures img:hover {
 	transform: scale(5);
+	border: 1px solid white;
 }
 
 .adminPictures th {
@@ -558,6 +561,18 @@ form.loginForm .passwordInput {
 
 .adminPictureAlternativeAnswers {
 	width: 250px;
+}
+
+.adminPictureEdit {
+	width: 60px;
+	text-align: center;
+}
+
+.adminPictureEdit svg {
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	color: white;
 }
 
 .adminBtn {

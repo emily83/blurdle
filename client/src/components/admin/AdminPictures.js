@@ -1,6 +1,8 @@
 import {  useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { GlobalContext } from '../../context/GlobalState';
 import BeatLoader from "react-spinners/BeatLoader";
+import { AiFillEdit } from "react-icons/ai"
 
 const AdminPictures = () => {
     
@@ -60,6 +62,7 @@ const AdminPictures = () => {
                                 <th className="adminPictureAnswer">Answer</th>
                                 <th className="adminPictureAlternativeAnswers">Alternative Answers</th>
                                 <th className="adminPicturePicture">Picture</th>
+                                <th className="adminPictureEdit"></th>
                             </tr>
                         </thead>
                     </table>
@@ -75,6 +78,9 @@ const AdminPictures = () => {
                                     <td className="adminPictureAnswer">{p.answer}</td>
                                     <td className="adminPictureAlternativeAnswers">{p.alternativeAnswers.map((a,i) => <div key={i}>{a}</div>)}</td>
                                     <td className="adminPicturePicture"><img src={p.url} alt={p.answer} /></td>
+                                    <td className="adminPictureEdit">
+                                        <Link to="/admin/pictureForm" state={p}><AiFillEdit /></Link>
+                                    </td>
                                 </tr>
                                 )
                             })}

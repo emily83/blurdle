@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { GlobalContext } from '../../context/GlobalState';
 import DatePicker from 'react-date-picker';
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
@@ -24,14 +24,14 @@ function makeCrop(mediaWidth, mediaHeight, aspect) {
 const AdminAddPicture = () => {
     
     let navigate = useNavigate();
+    const location = useLocation();
 
     const { savePicture, isSaving, isSaveSuccessful, error, setError, setIsSaveSuccessful } = useContext(GlobalContext);
-
-    const [pictureDate, setPictureDate] = useState(new Date());
-    const [answer, setAnswer] = useState('');
-    const [alternativeAnswers, setAlternativeAnswers] = useState(['']);
-
-    const [imgSrc, setImgSrc] = useState('');
+    const pictureId = location.state ? location.state._id : null;
+    const [pictureDate, setPictureDate] = useState( location.state ? new Date( location.state.date ) : new Date() );
+    const [answer, setAnswer] = useState( location.state ? location.state.answer : '' );
+    const [alternativeAnswers, setAlternativeAnswers] = useState( location.state && location.state.alternativeAnswers.length ? location.state.alternativeAnswers : ['']);
+    const [imgSrc, setImgSrc] = useState(location.state ? location.state.url : '' );
     const previewCanvasRef = useRef(null);
     const imgRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -107,11 +107,24 @@ const AdminAddPicture = () => {
             setError('Please enter answer');
             return false;
           }
-          previewCanvasRef.current.toBlob(function(blob){
-            const newImage = new File([blob], blob.name, {type: blob.type,});
-            const altAns = alternativeAnswers.filter((a) => a);
-            savePicture(pictureDate, newImage, answer, altAns);
-          }, 'image/jpeg', 0.95);         
+
+          const altAns = alternativeAnswers.filter((a) => a);
+
+          let isNewImage = true;
+          if ( location.state ) {
+            if ( location.state.url === imgSrc ) {
+              isNewImage = false;
+            }
+          }
+          if (isNewImage) {
+            previewCanvasRef.current.toBlob(function(blob){
+              const newImage = new File([blob], blob.name, {type: blob.type,});          
+              savePicture( pictureId, pictureDate, isNewImage, newImage, answer, altAns);
+            }, 'image/jpeg', 0.95);      
+          } else {
+            savePicture( pictureId, pictureDate, isNewImage, '', answer, altAns);
+          }
+   
       }
 
       const handeAltAnswerChange = (e, index) => {

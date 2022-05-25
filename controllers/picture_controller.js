@@ -177,6 +177,33 @@ exports.addPicture = async (req, res, next) => {
     
 }
 
+// @desc    Change picture
+// @route   PUT /api/v1/pictures/:id
+// @access  Public
+exports.changePicture = async (req, res, next) => {
+    try {
+
+        const picture = await Picture.findByIdAndUpdate(req.params.id,req.body);
+        if (!picture) {
+            return res.status(404).json({
+                success: false,
+                error: 'No picture found'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: {}
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+}
+
 // @desc    Delete picture
 // @route   DELETE /api/v1/pictures/:id
 // @access  Public

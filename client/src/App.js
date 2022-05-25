@@ -4,7 +4,7 @@ import Game from './components/Game';
 import Admin from './components/admin/Admin';
 import Login from './components/admin/auth/Login';
 import AdminPictures from './components/admin/AdminPictures';
-import AdminAddPicture from './components/admin/AdminAddPicture';
+import AdminPictureForm from './components/admin/AdminPictureForm';
 
 function App() {
 
@@ -30,10 +30,10 @@ function App() {
               }
           />
           <Route
-              path="addPicture"
+              path="pictureForm"
               element={
                 <RequireAuth>
-                  <AdminAddPicture />
+                  <AdminPictureForm />
                 </RequireAuth>
               }
           />
