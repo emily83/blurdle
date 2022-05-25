@@ -603,14 +603,14 @@ form.loginForm .passwordInput {
 	width: 100px;
 }
 
-#pictureForm .formData {
-
-}
-
 #pictureForm input[type="text"] {
 	font-size: 20px;
 	width: 300px;
 	padding: 5px;
+}
+
+#pictureNumber {
+	width: 60px !important;
 }
 
 #pictureForm .react-date-picker {

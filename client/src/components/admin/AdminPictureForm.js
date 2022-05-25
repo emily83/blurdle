@@ -28,6 +28,7 @@ const AdminAddPicture = () => {
 
     const { savePicture, isSaving, isSaveSuccessful, error, setError, setIsSaveSuccessful } = useContext(GlobalContext);
     const pictureId = location.state ? location.state._id : null;
+    const [pictureNumber, setPictureNumber] = useState( location.state ? location.state.pictureNumber : '' );
     const [pictureDate, setPictureDate] = useState( location.state ? new Date( location.state.date ) : new Date() );
     const [answer, setAnswer] = useState( location.state ? location.state.answer : '' );
     const [alternativeAnswers, setAlternativeAnswers] = useState( location.state && location.state.alternativeAnswers.length ? location.state.alternativeAnswers : ['']);
@@ -119,10 +120,10 @@ const AdminAddPicture = () => {
           if (isNewImage) {
             previewCanvasRef.current.toBlob(function(blob){
               const newImage = new File([blob], blob.name, {type: blob.type,});          
-              savePicture( pictureId, pictureDate, isNewImage, newImage, answer, altAns);
+              savePicture( pictureId, pictureDate, isNewImage, newImage, answer, altAns, pictureNumber);
             }, 'image/jpeg', 0.95);      
           } else {
-            savePicture( pictureId, pictureDate, isNewImage, '', answer, altAns);
+            savePicture( pictureId, pictureDate, isNewImage, '', answer, altAns, pictureNumber);
           }
    
       }
@@ -163,6 +164,20 @@ const AdminAddPicture = () => {
             <form id="pictureForm">
 
               { error && <div id="pictureFormError">{error}</div> }
+
+              { pictureId &&
+                <div className="formControl">
+                      <label htmlFor="pictureNumber">Number</label>
+                      <div className="formData">
+                        <input 
+                            type="text" 
+                            id="pictureNumber" 
+                            onChange={ (event) => setPictureNumber(event.target.value) }
+                            value={pictureNumber} 
+                        />    
+                      </div>               
+                  </div>
+                }
 
                 <div className="formControl">
                     <label htmlFor="pictureDate">Date</label>

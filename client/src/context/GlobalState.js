@@ -341,7 +341,7 @@ export const GlobalProvider = ({ children }) => {
         });
     }
 
-    async function savePicture( pictureId, pictureDate, isNewImage, file, answer, alternativeAnswers ) {
+    async function savePicture( pictureId, pictureDate, isNewImage, file, answer, alternativeAnswers, pictureNumber ) {
         
         try {
             
@@ -353,6 +353,10 @@ export const GlobalProvider = ({ children }) => {
                 "date": formatDate(pictureDate),
                 "answer": answer,
                 "alternativeAnswers": alternativeAnswers
+            }
+
+            if ( pictureId && pictureNumber ) {
+                picture.pictureNumber = pictureNumber;
             }
 
             if ( isNewImage ) {
