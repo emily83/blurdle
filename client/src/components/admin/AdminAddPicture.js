@@ -31,12 +31,20 @@ const AdminAddPicture = () => {
     const [answer, setAnswer] = useState('');
     const [alternativeAnswers, setAlternativeAnswers] = useState(['']);
 
-    const [imgSrc, setImgSrc] = useState('')
-    const previewCanvasRef = useRef(null)
-    const imgRef = useRef(null)
-    const [crop, setCrop] = useState()
-    const [completedCrop, setCompletedCrop] = useState()
+    const [imgSrc, setImgSrc] = useState('');
+    const previewCanvasRef = useRef(null);
+    const imgRef = useRef(null);
+    const fileInputRef = useRef(null);
+    const [crop, setCrop] = useState();
+    const [completedCrop, setCompletedCrop] = useState();
     const aspect = 1;
+
+    useEffect(() => {
+      window.addEventListener('paste', e => {
+        fileInputRef.current.files = e.clipboardData.files;
+      fileSelected(fileInputRef.current);
+      });
+    }, []);
 
     useEffect(() => {
       if (isSaveSuccessful) {
@@ -45,16 +53,20 @@ const AdminAddPicture = () => {
       }
     }, [isSaveSuccessful]);
 
-    function onSelectFile(e) {
-        if (e.target.files && e.target.files.length > 0) {
-          setCrop(undefined) // Makes crop preview update between images.
-          const reader = new FileReader()
-          reader.addEventListener('load', () =>
-            setImgSrc(reader.result.toString() || ''),
-          )
-          reader.readAsDataURL(e.target.files[0])
-        }
+    function onSelectFile(e) {      
+      fileSelected(e.target);
+    }
+
+    function fileSelected(fileInput) {
+      if (fileInput.files && fileInput.files.length > 0) {
+        setCrop(undefined) // Makes crop preview update between images.
+        const reader = new FileReader()
+        reader.addEventListener('load', () =>
+          setImgSrc(reader.result.toString() || ''),
+        )
+        reader.readAsDataURL(fileInput.files[0])
       }
+    }
     
       function onImageLoad(e) {
         if (aspect) {
@@ -152,7 +164,12 @@ const AdminAddPicture = () => {
                 <div className="formControl">
                     <label htmlFor="picture">Picture</label>
                     <div className="formData">
-                      <input type="file" accept="image/*" onChange={onSelectFile} />
+                      <input 
+                        type="file" 
+                        ref={fileInputRef}
+                        accept="image/*" 
+                        onChange={onSelectFile} 
+                      />
                 
                       <div className="pictureSelection">
                           {Boolean(imgSrc) && (
