@@ -21,15 +21,15 @@ function makeCrop(mediaWidth, mediaHeight, aspect) {
  
 }
 
-const AdminAddPicture = () => {
+const AdminPictureForm = () => {
     
     let navigate = useNavigate();
     const location = useLocation();
 
-    const { savePicture, isSaving, isSaveSuccessful, error, setError, setIsSaveSuccessful } = useContext(GlobalContext);
+    const { savePicture, isSaving, isSaveSuccessful, error, setError, setIsSaveSuccessful, nextFreeDate, getNextFreeDate } = useContext(GlobalContext);
     const pictureId = location.state ? location.state._id : null;
     const [pictureNumber, setPictureNumber] = useState( location.state ? location.state.pictureNumber : '' );
-    const [pictureDate, setPictureDate] = useState( location.state ? new Date( location.state.date ) : new Date() );
+    const [pictureDate, setPictureDate] = useState( location.state ? new Date( location.state.date ) : nextFreeDate );
     const [answer, setAnswer] = useState( location.state ? location.state.answer : '' );
     const [alternativeAnswers, setAlternativeAnswers] = useState( location.state && location.state.alternativeAnswers.length ? location.state.alternativeAnswers : ['']);
     const [imgSrc, setImgSrc] = useState(location.state ? location.state.url : '' );
@@ -41,6 +41,9 @@ const AdminAddPicture = () => {
     const aspect = 1;
 
     useEffect(() => {
+      if ( !location.state ) {
+        getNextFreeDate();
+      }
       window.addEventListener('paste', e => {
         fileInputRef.current.files = e.clipboardData.files;
         fileSelected(fileInputRef.current);
@@ -55,6 +58,14 @@ const AdminAddPicture = () => {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSaveSuccessful]);
+
+    useEffect(() => {
+      if ( !location.state && nextFreeDate != null) {
+        setPictureDate(new Date(nextFreeDate));
+        //console.log(`next free date is ${nextFreeDate}`)
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nextFreeDate]);
 
     function onSelectFile(e) {      
       fileSelected(e.target);
@@ -275,4 +286,4 @@ const AdminAddPicture = () => {
     )
 }
 
-export default AdminAddPicture
+export default AdminPictureForm

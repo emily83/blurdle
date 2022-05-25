@@ -41,7 +41,8 @@ const initialState = {
     adminAuthenticated: Cookies.get('jwtToken') ? Cookies.get('jwtToken') : false,
     error: null,
     isSaving: false,
-    isSaveSuccessful: false
+    isSaveSuccessful: false,
+    nextFreeDate: null
 }
 
 const config = {
@@ -409,6 +410,24 @@ export const GlobalProvider = ({ children }) => {
         });
     }
 
+    async function getNextFreeDate() {
+        try {
+    
+          const res = await axios.get('/api/v1/pictures/nextFreeDate');
+          setNextFreeDate(res.data.data);     
+    
+        } catch (error) {
+          toast('Unable to get pictures. Please make sure you have an internet connection')
+        }
+    }
+    
+   function setNextFreeDate(nextFreeDate) {
+    dispatch({
+        type: 'SET_NEXT_FREE_DATE',
+        payload: nextFreeDate
+    });
+}
+
     return (
         <GlobalContext.Provider value={{    
             isLoading: state.isLoading,
@@ -429,6 +448,7 @@ export const GlobalProvider = ({ children }) => {
             error: state.error,
             isSaving: state.isSaving,
             isSaveSuccessful: state.isSaveSuccessful,
+            nextFreeDate: state.nextFreeDate,
             setIsLoading,
             setIsGuessing,
             setIsSubmitting,
@@ -454,7 +474,8 @@ export const GlobalProvider = ({ children }) => {
             getPictures,
             setError,
             savePicture,
-            setIsSaveSuccessful
+            setIsSaveSuccessful,
+            getNextFreeDate
         }}>
             {children}
         </GlobalContext.Provider>

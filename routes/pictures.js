@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getPictures, addPicture, changePicture, deletePicture, getBlurryPicture, guessPicture } = require('../controllers/picture_controller');
+const { getPictures, addPicture, changePicture, deletePicture, getBlurryPicture, guessPicture, getNextFreeDate } = require('../controllers/picture_controller');
 
 router
     .route('/')
@@ -19,5 +19,9 @@ router
 router
     .route('/:date/guess')
     .post(guessPicture);
+
+router
+    .route('/nextFreeDate')
+    .get(getNextFreeDate);
 
 module.exports = router;

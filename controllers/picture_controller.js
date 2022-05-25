@@ -232,3 +232,24 @@ exports.deletePicture = async (req, res, next) => {
         });
     }
 }
+
+// @desc    Get next free date
+// @route   GET /api/v1/pictures/nextFreeDate
+// @access  Public
+exports.getNextFreeDate = async(req, res, next) => {
+    try {
+        const picture = await Picture.find({}, 'date').sort({date: 'descending'}).limit(1)
+        const d = new Date(picture[0].date);
+        d.setDate(d.getDate() + 1);
+
+        return res.status(200).json({
+            success: true,
+            data: d
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+}

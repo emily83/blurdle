@@ -148,6 +148,12 @@ export default function variable(state, action) {
                 isSaveSuccessful: action.payload
             }
 
+        case 'SET_NEXT_FREE_DATE':
+            return {
+                ...state,
+                nextFreeDate: action.payload
+            }
+
         default:
             return state;
     }
