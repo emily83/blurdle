@@ -1,4 +1,4 @@
-import {  useContext, useEffect } from 'react';
+import {  useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../context/GlobalState';
 import BeatLoader from "react-spinners/BeatLoader";
 
@@ -10,7 +10,8 @@ const AdminPictures = () => {
         pictures
     } = useContext(GlobalContext);
 
-    
+    const [search, setSearch] = useState('');
+
     //when component loads
     useEffect(() => {
         getPictures();
@@ -20,6 +21,15 @@ const AdminPictures = () => {
     return (
         <>
             <h2>Daily Pictures</h2>
+
+            <div>
+                Search
+                <input 
+                    type="text"  
+                    onChange={ (event) => setSearch(event.target.value) }
+                    value={search} 
+                /> 
+            </div>
         
             { isLoading && <BeatLoader id="mainLoader" color="#fff" size={20} css={`margin-top:50px`} /> }
             { !isLoading && 

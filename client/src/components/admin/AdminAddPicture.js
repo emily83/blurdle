@@ -42,8 +42,9 @@ const AdminAddPicture = () => {
     useEffect(() => {
       window.addEventListener('paste', e => {
         fileInputRef.current.files = e.clipboardData.files;
-      fileSelected(fileInputRef.current);
+        fileSelected(fileInputRef.current);
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -51,6 +52,7 @@ const AdminAddPicture = () => {
         setIsSaveSuccessful(false);
         navigate('/admin');
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSaveSuccessful]);
 
     function onSelectFile(e) {      
