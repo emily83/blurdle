@@ -18,15 +18,33 @@ const AdminPictures = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function searchChanged(e) {
+        setSearch(e.target.value);
+
+        var filter, table, tr, td, i;
+        filter = e.target.value.toUpperCase();
+        table = document.getElementById("adminPicturesTableBody");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByClassName("adminPictureAnswer")[0];
+            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+
+    }
+ 
     return (
         <>
             <h2>Daily Pictures</h2>
 
-            <div>
+            <div id="pictureSearchContainer">
                 Search
                 <input 
                     type="text"  
-                    onChange={ (event) => setSearch(event.target.value) }
+                    onChange={searchChanged}
                     value={search} 
                 /> 
             </div>
@@ -46,7 +64,7 @@ const AdminPictures = () => {
                         </thead>
                     </table>
                     <div id="adminPicturesBodyContainer">
-                        <table className="adminPictures">
+                        <table id="adminPicturesTableBody" className="adminPictures">
                             <tbody>
                             { pictures.slice(0).reverse().map(p => {
                                 const d = new Date(p.date);

@@ -510,6 +510,17 @@ form.loginForm .passwordInput {
 	border-collapse: collapse;
 }
 
+#pictureSearchContainer {
+	position: absolute;
+	top: 15px;
+}
+
+#pictureSearchContainer input {
+	margin-left: 10px;
+	font-size: 20px;
+	width: 200px;
+}
+
 .adminPictures img {
 	width: 70px;
 	height: 70px;
