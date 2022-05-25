@@ -16,7 +16,7 @@ const roundBlurs = {
 // @access  Public
 exports.getPictures = async(req, res, next) => {
     try {
-        const pictures = await Picture.find();
+        const pictures = await Picture.find().sort({date: 'descending'});
 
         return res.status(200).json({
             success: true,

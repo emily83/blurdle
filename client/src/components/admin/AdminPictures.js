@@ -69,7 +69,7 @@ const AdminPictures = () => {
                     <div id="adminPicturesBodyContainer">
                         <table id="adminPicturesTableBody" className="adminPictures">
                             <tbody>
-                            { pictures.slice(0).reverse().map(p => {
+                            { pictures.map(p => {
                                 const d = new Date(p.date);
                                 return (
                                 <tr key={p._id}>
