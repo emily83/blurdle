@@ -112,7 +112,7 @@ exports.guessPicture = async (req, res, next) => {
                 data.answer = picture.answer;   
                 data.image = await image.getBase64Async(Jimp.AUTO);
             } else {
-                if ( score < 1 ) {
+                if ( score < 0.5 ) {
                     data.outcome = 'close';
                 } else {
                     data.outcome = 'incorrect';
