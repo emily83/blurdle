@@ -44,9 +44,9 @@
 Blurdle is a daily guessing game, based on the Wordle trend, designed to be played on mobile browsers.
 
 <div style="display: flex; justify-content: space-between">
-  <img src="client/src/screenshots/blurdle-screenshot-1.jpg" width="33%" alt="Screenshot 1">
-  <img src="client/src/screenshots/blurdle-screenshot-2.jpg" width="33%" alt="Screenshot 2">
-    <img src="client/src/screenshots/blurdle-screenshot-3.jpg" width="33%" alt="Screenshot 3">
+  <img src="client/src/screenshots/blurdle-screenshot-1.jpg" width="32%" alt="Screenshot 1">
+  <img src="client/src/screenshots/blurdle-screenshot-2.jpg" width="32%" alt="Screenshot 2">
+    <img src="client/src/screenshots/blurdle-screenshot-3.jpg" width="32%" alt="Screenshot 3">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
